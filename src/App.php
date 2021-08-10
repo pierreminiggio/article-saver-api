@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Command\SaveContentCommand;
 use App\Command\SaveHeadlineCommand;
+use App\Controller\SaveContentController;
 use App\Controller\SaveHeadlineController;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
@@ -51,6 +53,12 @@ class App
             $this->protectUsingToken($authHeader, $config);
             (new SaveHeadlineController(
                 new SaveHeadlineCommand($fetcher)
+            ))(file_get_contents('php://input'));
+            exit;
+        } elseif ($path === '/content' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->protectUsingToken($authHeader, $config);
+            (new SaveContentController(
+                new SaveContentCommand($fetcher)
             ))(file_get_contents('php://input'));
             exit;
         }
