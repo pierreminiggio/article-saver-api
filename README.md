@@ -8,7 +8,7 @@ CREATE TABLE `article_saver`.`article` (
     `link` TEXT NOT NULL,
     `thumbnail` TEXT NOT NULL,
     `pub_date_string` VARCHAR(70) NOT NULL,
-    `content` TEXT NULL,
+    `content` LONGTEXT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
