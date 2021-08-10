@@ -25,7 +25,8 @@ class SaveHeadlineCommand
             $this->fetcher->createQuery(
                 'article'
             )->select(
-                'id'
+                'id',
+                'content'
             )->where(
                 'uuid = :uuid'
             ),
@@ -33,7 +34,11 @@ class SaveHeadlineCommand
         );
 
         if ($fetchedIds) {
-            throw new AlreadyExistsException();
+            if ($fetchedIds[0]['content'] !== null) {
+                throw new AlreadyExistsException();
+            }
+
+            return;
         }
 
         $this->fetcher->exec(
