@@ -66,8 +66,6 @@ class App
             ))(file_get_contents('php://input'));
             exit;
         } elseif (str_starts_with($path, $articleUrlPrefix)) {
-            $this->protectUsingToken($authHeader, $config);
-
             (new ShowArticleController(
                 new ArticleQuery($fetcher)
             ))(explode('?', substr($path, strlen($articleUrlPrefix)))[0]);
