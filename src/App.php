@@ -6,6 +6,8 @@ use App\Command\SaveContentCommand;
 use App\Command\SaveHeadlineCommand;
 use App\Controller\SaveContentController;
 use App\Controller\SaveHeadlineController;
+use App\Controller\ShowArticleController;
+use App\Query\ArticleQuery;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
 use RuntimeException;
@@ -49,6 +51,8 @@ class App
             DatabaseConnection::UTF8_MB4
         ));
 
+        $articleUrlPrefix = '/article/';
+
         if ($path === '/headline' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->protectUsingToken($authHeader, $config);
             (new SaveHeadlineController(
@@ -60,6 +64,13 @@ class App
             (new SaveContentController(
                 new SaveContentCommand($fetcher)
             ))(file_get_contents('php://input'));
+            exit;
+        } elseif (str_starts_with($path, $articleUrlPrefix)) {
+            $this->protectUsingToken($authHeader, $config);
+
+            (new ShowArticleController(
+                new ArticleQuery($fetcher)
+            ))(explode('?', substr($path, strlen($articleUrlPrefix)))[0]);
             exit;
         }
 
