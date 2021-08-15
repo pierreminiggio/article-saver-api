@@ -26,20 +26,20 @@ class GenericContentPopulator extends ContentFragmentPopulator
         $audioLink = $this->getAudioLink($textContent);
         $content['audio'] = $audioLink;
         $content['audio_duration'] = $this->getAudioDuration($audioLink);
-        var_dump($content['audio_duration']);
+        var_dump($audioLink);
         $content['audio_cues'] = $this->getAudioCues($textContent);
 
         return $content;
     }
 
-    protected function getAudioLink(string $textContent, int $tries = 2): string
+    protected function getAudioLink(string $textContent, bool $enchance = true, int $tries = 2): string
     {
 
         if ($tries <= 0) {
             throw new InvalidArgumentException('Tries must be >= 1');
         }
 
-        $curl = curl_init('https://voice.ggio.fr/processed');
+        $curl = curl_init('https://voice.ggio.fr/processed' . ($enchance ? '' : '?enhance=0'));
         curl_setopt_array($curl, [
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_RETURNTRANSFER => true,
@@ -70,17 +70,78 @@ class GenericContentPopulator extends ContentFragmentPopulator
             throw new Exception('Could not get audio');
         }
 
-        return $this->getAudioLink($textContent, $tries - 1);
+        return $this->getAudioLink($textContent, $enchance, $tries - 1);
     }
 
     protected function getAudioCues(string $textContent): array
     {
         $cues = [];
 
+        /** key: pattern, value: cue name */
+        $cueTypes = [
+            'automaker' => 'automaker',
+            'button' => 'button',
+            'california' => 'california',
+            'download' => 'download',
+            'electric' => 'electricity',
+            'electricity' => 'electricity',
+            'elon' => 'elon',
+            'full' => 'full',
+            'tesla' => 'tesla',
+            'mars' => 'mars',
+            'month' => 'month',
+            'midnight' => 'midnight',
+            'musk' => 'elon',
+            'news' => 'news',
+            'public' => 'public',
+            'saturday' => 'saturday',
+            'self-driving' => 'self-driving',
+            'spend' => 'spend',
+            'spent' => 'spend',
+            'time' => 'time',
+            'turning' => 'turn',
+            'wait' => 'time',
+            'waiting' => 'time',
+            'weekend' => 'weekend'
+        ];
+        
+        foreach ($cueTypes as $cuePattern => $cueName) {
+            $previousText = '';
+            $explodedTexts = explode($cuePattern, strtolower($textContent));
+            
+            if (count($explodedTexts) === 1) {
+                continue;
+            }
+
+            foreach ($explodedTexts as $explodedTextIndex => $explodedText) {
+
+                $previousText .= $explodedText;
+
+                if ($explodedTextIndex === 1) {
+                    continue;
+                }
+
+                $time = $previousText
+                    ? $this->getAudioDuration(
+                        $this->getAudioLink($previousText, false)
+                    )
+                    : 0
+                ;
+
+                $cues[] = [
+                    'time' => $time,
+                    'name' => $cueName
+                ];
+
+                $previousText .= $cuePattern;
+            }
+        }
+        var_dump($cues); die;
+
         return $cues;
     }
 
-    protected function getAudioDuration(string $audioLink): mixed
+    protected function getAudioDuration(string $audioLink): float
     {
         $downloadedFilePath = $this->downloadAudioFileIfNeeded($audioLink);
 
