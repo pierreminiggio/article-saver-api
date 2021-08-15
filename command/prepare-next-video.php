@@ -75,3 +75,4 @@ foreach ($jsonArticleContent as $contentFragment) {
 }
 
 $remotionProps = ['props' => $props];
+var_dump($remotionProps);

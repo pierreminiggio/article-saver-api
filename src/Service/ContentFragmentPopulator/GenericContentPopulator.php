@@ -26,7 +26,6 @@ class GenericContentPopulator extends ContentFragmentPopulator
         $audioLink = $this->getAudioLink($textContent);
         $content['audio'] = $audioLink;
         $content['audio_duration'] = $this->getAudioDuration($audioLink);
-        var_dump($audioLink);
         $content['audio_cues'] = $this->getAudioCues($textContent);
 
         return $content;
@@ -136,7 +135,6 @@ class GenericContentPopulator extends ContentFragmentPopulator
                 $previousText .= $cuePattern;
             }
         }
-        var_dump($cues); die;
 
         return $cues;
     }
