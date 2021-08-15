@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8ba191cda4e2e819ae7d54ea9728791",
+    "content-hash": "433785a4ad159d2724080fa8626cf2ee",
     "packages": [
         {
             "name": "neutronstars/database-sql",
@@ -52,7 +52,7 @@
         },
         {
             "name": "pierreminiggio/config-provider",
-            "version": "1.0.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pierreminiggio/php-config-provider.git",
@@ -67,6 +67,7 @@
             "require": {
                 "php": "^8.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -167,7 +168,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "pierreminiggio/config-provider": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

@@ -8,6 +8,7 @@ use App\Controller\SaveContentController;
 use App\Controller\SaveHeadlineController;
 use App\Controller\ShowArticleController;
 use App\Query\ArticleQuery;
+use PierreMiniggio\ConfigProvider\ConfigProvider;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
 use RuntimeException;
@@ -40,7 +41,8 @@ class App
             exit;
         }
 
-        $config = require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config.php';
+        $projectDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
+        $config = (new ConfigProvider($projectDir))->get();
 
         $dbConfig = $config['db'];
         $fetcher = new DatabaseFetcher(new DatabaseConnection(

@@ -16,7 +16,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "pierreminiggio/config-provider": "^1.0",
+        "pierreminiggio/config-provider": "dev-main",
         "pierreminiggio/database-fetcher": "^1.0"
     },
     "scripts-descriptions": {

@@ -4,7 +4,7 @@ return [
     'token' => '',
     'db' => [
         'host' => '',
-        'database' => 'article_saver',
+        'database' => 'article',
         'username' => '',
         'password' => ''
     ]

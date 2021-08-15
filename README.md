@@ -12,4 +12,13 @@ CREATE TABLE `article_saver`.`article` (
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `article`.`video_to_render` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `article_id` INT NOT NULL,
+    `remotion_props` LONGTEXT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
 ```
