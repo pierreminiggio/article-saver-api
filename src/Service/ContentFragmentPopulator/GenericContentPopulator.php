@@ -63,7 +63,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             return $audioLink;
         }
 
-        if ($tries === 0) {
+        if ($tries === 1) {
             throw new Exception('Could not get audio');
         }
 
