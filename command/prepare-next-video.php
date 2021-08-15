@@ -20,6 +20,8 @@ $fetcher = new DatabaseFetcher(new DatabaseConnection(
     DatabaseConnection::UTF8_MB4
 ));
 
+$token = $config['token'];
+
 $fetchedArticles = $fetcher->query(
     $fetcher->createQuery(
         'article',
@@ -66,8 +68,10 @@ $jsonArticleContent = json_decode($articleContent, true);
 
 $props = [];
 
+$contentPopulatorFactory = new ContentFragmentPopulatorFactory($token);
+
 foreach ($jsonArticleContent as $contentFragment) {
-    $props[] = ContentFragmentPopulatorFactory::make($contentFragment)->populate($contentFragment);
+    $props[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment);
 }
 
 $remotionProps = ['props' => $props];

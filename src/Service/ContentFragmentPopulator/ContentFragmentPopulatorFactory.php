@@ -6,13 +6,20 @@ use Exception;
 
 class ContentFragmentPopulatorFactory
 {
-    public static function make(array $content, string $token): ContentFragmentPopulator
+
+    public function __construct(private string $token)
+    {
+    }
+
+    public function make(array $content): ContentFragmentPopulator
     {
         $contentType = $content['type'] ?? null;
 
         if (! $contentType) {
             return new DoNothingPopulator();
         }
+
+        $token = $this->token;
 
         if (
             in_array($contentType, [
