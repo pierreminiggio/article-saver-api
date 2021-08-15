@@ -68,7 +68,7 @@ $jsonArticleContent = json_decode($articleContent, true);
 
 $props = [];
 
-$contentPopulatorFactory = new ContentFragmentPopulatorFactory($token);
+$contentPopulatorFactory = new ContentFragmentPopulatorFactory($token, $projectDir);
 
 foreach ($jsonArticleContent as $contentFragment) {
     $props[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment);

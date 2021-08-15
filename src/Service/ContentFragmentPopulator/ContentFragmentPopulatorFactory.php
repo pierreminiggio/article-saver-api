@@ -7,7 +7,7 @@ use Exception;
 class ContentFragmentPopulatorFactory
 {
 
-    public function __construct(private string $token)
+    public function __construct(private string $token, private string $projectDir)
     {
     }
 
@@ -20,6 +20,7 @@ class ContentFragmentPopulatorFactory
         }
 
         $token = $this->token;
+        $projectDir = $this->projectDir;
 
         if (
             in_array($contentType, [
@@ -27,7 +28,7 @@ class ContentFragmentPopulatorFactory
                 'text'
             ])
         ) {
-            return new GenericContentPopulator($token, 'content');
+            return new GenericContentPopulator($token, $projectDir, 'content');
         }
 
         if (
@@ -35,7 +36,7 @@ class ContentFragmentPopulatorFactory
                 'captioned-image'
             ])
         ) {
-            return new GenericContentPopulator($token, 'caption');
+            return new GenericContentPopulator($token, $projectDir, 'caption');
         }
 
         if (
@@ -43,7 +44,7 @@ class ContentFragmentPopulatorFactory
                 'title'
             ])
         ) {
-            return new GenericContentPopulator($token, 'title');
+            return new GenericContentPopulator($token, $projectDir, 'title');
         }
 
         if (
@@ -59,7 +60,7 @@ class ContentFragmentPopulatorFactory
                 'twitter'
             ])
         ) {
-            return new TwitterContentPopulator($token);
+            return new TwitterContentPopulator($token, $projectDir);
         }
         
         throw new Exception('Not implemented');
