@@ -9,7 +9,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
 {
 
     public function __construct(private string $token, private string $contentKey)
-    { 
+    {
     }
 
 
