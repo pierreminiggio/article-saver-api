@@ -59,7 +59,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             $audioLink = $jsonCurlResponse['url'] ?? null;
         }
 
-        if (! $audioLink) {
+        if ($audioLink) {
             return $audioLink;
         }
 
