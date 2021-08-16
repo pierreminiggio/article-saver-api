@@ -7,7 +7,9 @@ use App\Command\SaveHeadlineCommand;
 use App\Controller\SaveContentController;
 use App\Controller\SaveHeadlineController;
 use App\Controller\ShowArticleController;
+use App\Controller\ShowRemotionPropsController;
 use App\Query\ArticleQuery;
+use App\Query\RemotionPropsQuery;
 use PierreMiniggio\ConfigProvider\ConfigProvider;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
@@ -54,6 +56,7 @@ class App
         ));
 
         $articleUrlPrefix = '/article/';
+        $remotionUrlPrefix = '/remotion/';
 
         if ($path === '/headline' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->protectUsingToken($authHeader, $config);
@@ -71,6 +74,11 @@ class App
             (new ShowArticleController(
                 new ArticleQuery($fetcher)
             ))(explode('?', substr($path, strlen($articleUrlPrefix)))[0]);
+            exit;
+        } elseif (str_starts_with($path, $remotionUrlPrefix)) {
+            (new ShowRemotionPropsController(
+                new RemotionPropsQuery($fetcher)
+            ))(explode('?', substr($path, strlen($remotionUrlPrefix)))[0]);
             exit;
         }
 

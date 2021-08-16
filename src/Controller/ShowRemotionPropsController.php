@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\Query\ArticleQuery;
+use App\Query\RemotionPropsQuery;
 use OutOfBoundsException;
 
-class ShowArticleController
+class ShowRemotionPropsController
 {
-    public function __construct(private ArticleQuery $query)
+    public function __construct(private RemotionPropsQuery $query)
     {
     }
 

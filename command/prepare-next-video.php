@@ -66,18 +66,18 @@ if (! $articleContent) {
 
 $jsonArticleContent = json_decode($articleContent, true);
 
-$props = [];
+$contentProps = [];
 $totalDuration = 0.0;
 
 $contentPopulatorFactory = new ContentFragmentPopulatorFactory($token, $projectDir);
 
 foreach ($jsonArticleContent as $contentFragment) {
-    $props[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment, $totalDuration);
+    $contentProps[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment, $totalDuration);
 }
 
 $remotionProps = [
     'duration' => $totalDuration,
-    'props' => $props
+    'content' => $contentProps
 ];
 
 // Save props
