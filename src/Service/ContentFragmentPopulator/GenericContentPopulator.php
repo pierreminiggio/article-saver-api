@@ -157,8 +157,8 @@ class GenericContentPopulator extends ContentFragmentPopulator
 
     protected function downloadAudioFileIfNeeded(string $audioLink): string
     {
-        $baseLink = 'https://voice.ggio.fr/processed/';
-        $audioUuid = substr($audioLink, strlen($baseLink));
+        $baseLink = 'https://voice.ggio.fr/public/cache/processed/';
+        $audioFileName = substr($audioLink, strlen($baseLink));
         
         $projectDir = $this->projectDir;
         $cacheFolder = $projectDir . 'cache' . DIRECTORY_SEPARATOR;
@@ -167,7 +167,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             mkdir($cacheFolder);
         }
 
-        $downloadedFilePath = $cacheFolder . $audioUuid . '.mp3';
+        $downloadedFilePath = $cacheFolder . $audioFileName;
 
         if (file_exists($downloadedFilePath)) {
             return $downloadedFilePath;
