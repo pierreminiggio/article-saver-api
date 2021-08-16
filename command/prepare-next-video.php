@@ -48,15 +48,15 @@ $fetchedArticle = $fetchedArticles[0];
 $articleId = (int) $fetchedArticle['id'];
 
 // Mark as starting preparing
-// $fetcher->exec(
-//     $fetcher->createQuery(
-//         'video_to_render'
-//     )->insertInto(
-//         'article_id',
-//         ':article_id'
-//     ),
-//     ['article_id' => $articleId]
-// );
+$fetcher->exec(
+    $fetcher->createQuery(
+        'video_to_render'
+    )->insertInto(
+        'article_id',
+        ':article_id'
+    ),
+    ['article_id' => $articleId]
+);
 
 $articleContent = $fetchedArticle['content'];
 
@@ -67,12 +67,30 @@ if (! $articleContent) {
 $jsonArticleContent = json_decode($articleContent, true);
 
 $props = [];
+$totalDuration = 0.0;
 
 $contentPopulatorFactory = new ContentFragmentPopulatorFactory($token, $projectDir);
 
 foreach ($jsonArticleContent as $contentFragment) {
-    $props[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment);
+    $props[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment, $totalDuration);
 }
 
-$remotionProps = ['props' => $props];
-var_dump($remotionProps);
+$remotionProps = [
+    'duration' => $totalDuration,
+    'props' => $props
+];
+
+// Save props
+$fetcher->query(
+    $fetcher->createQuery(
+        'video_to_render'
+    )->update(
+        'remotion_props = :remotion_props'
+    )->where(
+        'article_id = :article_id'
+    ),
+    [
+        'article_id' => $articleId,
+        'remotion_props' => json_encode($remotionProps)
+    ]
+);

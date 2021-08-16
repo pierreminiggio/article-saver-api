@@ -13,7 +13,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
     }
 
 
-    public function populate(array $content): array
+    public function populate(array $content, float &$totalDuration): array
     {
         $contentKey = $this->contentKey;
 
@@ -25,7 +25,9 @@ class GenericContentPopulator extends ContentFragmentPopulator
 
         $audioLink = $this->getAudioLink($textContent);
         $content['audio'] = $audioLink;
-        $content['audio_duration'] = $this->getAudioDuration($audioLink);
+        $audioDuration = $this->getAudioDuration($audioLink);
+        $totalDuration += $audioDuration;
+        $content['audio_duration'] = $audioDuration;
         $content['audio_cues'] = $this->getAudioCues($textContent);
 
         return $content;
