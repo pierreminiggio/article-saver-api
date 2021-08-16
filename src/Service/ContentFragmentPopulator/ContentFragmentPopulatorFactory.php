@@ -25,7 +25,8 @@ class ContentFragmentPopulatorFactory
         if (
             in_array($contentType, [
                 'block-quote',
-                'text'
+                'text',
+                'title'
             ])
         ) {
             return new GenericContentPopulator($token, $projectDir, 'content');
@@ -37,14 +38,6 @@ class ContentFragmentPopulatorFactory
             ])
         ) {
             return new GenericContentPopulator($token, $projectDir, 'caption');
-        }
-
-        if (
-            in_array($contentType, [
-                'title'
-            ])
-        ) {
-            return new GenericContentPopulator($token, $projectDir, 'title');
         }
 
         if (
