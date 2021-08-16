@@ -27,8 +27,8 @@ class GenericContentPopulator extends ContentFragmentPopulator
         $content['audio'] = $audioLink;
         $audioDuration = $this->getAudioDuration($audioLink);
         $totalDuration += $audioDuration;
-        $content['audio_duration'] = $audioDuration;
-        $content['audio_cues'] = $this->getAudioCues($textContent);
+        $content['audioDuration'] = $audioDuration;
+        $content['audioCues'] = $this->getAudioCues($textContent);
 
         return $content;
     }
