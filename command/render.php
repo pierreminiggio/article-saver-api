@@ -54,6 +54,8 @@ foreach ($videosToRender as $videoToRender) {
         continue;
     }
 
+    $rendererProject = $rendererProjects[array_rand($rendererProjects)];
+    
     try {
         $videoFile = $renderer->render(
             $rendererProject['token'],
