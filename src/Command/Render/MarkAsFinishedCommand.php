@@ -14,7 +14,7 @@ class MarkAsFinishedCommand
     {
         $this->fetcher->exec(
             $this->fetcher->createQuery(
-                'spinned_content_video_render_status'
+                'video_render_status'
             )->update(
                 'finished_at = NOW(), file_path = :file_path',
             )->where('id = :id'),

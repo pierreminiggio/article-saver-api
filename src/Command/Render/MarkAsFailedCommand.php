@@ -14,7 +14,7 @@ class MarkAsFailedCommand
     {
         $this->fetcher->exec(
             $this->fetcher->createQuery(
-                'spinned_content_video_render_status'
+                'video_render_status'
             )->update(
                 'failed_at = NOW(), fail_reason = :fail_reason',
             )->where('id = :id'),

@@ -19,7 +19,7 @@ class CurrentRenderStatusForVideoQuery
     {
         $fetchedStatuses = $this->fetcher->query(
             $this->fetcher->createQuery(
-                'spinned_content_video_render_status'
+                'video_render_status'
             )->select(
                 'id',
                 'finished_at',

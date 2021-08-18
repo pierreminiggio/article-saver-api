@@ -14,7 +14,7 @@ class MarkAsRenderingCommand
     {
         $this->fetcher->exec(
             $this->fetcher->createQuery(
-                'spinned_content_video_render_status'
+                'video_render_status'
             )->insertInto(
                 'video_id',
                 ':video_id'
