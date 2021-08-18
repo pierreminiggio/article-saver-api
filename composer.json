@@ -17,7 +17,8 @@
     "minimum-stability": "dev",
     "require": {
         "pierreminiggio/config-provider": "dev-main",
-        "pierreminiggio/database-fetcher": "^1.0"
+        "pierreminiggio/database-fetcher": "^1.0",
+        "pierreminiggio/github-action-remotion-renderer": "dev-main"
     },
     "scripts-descriptions": {
         "test": "Run all tests!"

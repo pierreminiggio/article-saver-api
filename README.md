@@ -21,4 +21,20 @@ CREATE TABLE `article`.`video_to_render` (
     `updated_at` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `video_render_status` (
+  `id` int NOT NULL,
+  `video_id` int NOT NULL,
+  `finished_at` datetime DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `failed_at` datetime DEFAULT NULL,
+  `fail_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE `video_render_status`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `video_render_status`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 ```

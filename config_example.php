@@ -7,5 +7,12 @@ return [
         'database' => 'article',
         'username' => '',
         'password' => ''
+    ],
+    'rendererProjects' => [
+        [
+            'token' => '',
+            'account' => 'pierreminiggio',
+            'project' => 'article-video-maker'
+        ]
     ]
 ];
