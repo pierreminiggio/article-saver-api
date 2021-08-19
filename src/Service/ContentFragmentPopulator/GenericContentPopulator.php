@@ -90,6 +90,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'button' => 'button',
             'calculat' => 'calculator',
             'california' => 'california',
+            'call' => 'call',
             'camera' => 'camera',
             'capture' => 'capture',
             'catch' => 'capture',
