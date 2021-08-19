@@ -120,6 +120,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'question' => 'question',
             'radar' => 'radar',
             'remove' => 'remove',
+            'road' => 'road',
             'rocket' => 'rocket',
             'roll' => 'roll',
             'saturday' => 'saturday',
