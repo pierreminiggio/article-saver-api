@@ -4,12 +4,14 @@ namespace App;
 
 use App\Command\SaveContentCommand;
 use App\Command\SaveHeadlineCommand;
+use App\Controller\Render\DisplayController;
 use App\Controller\SaveContentController;
 use App\Controller\SaveHeadlineController;
 use App\Controller\ShowArticleController;
 use App\Controller\ShowRemotionPropsController;
 use App\Query\ArticleQuery;
 use App\Query\RemotionPropsQuery;
+use App\Query\Render\CurrentRenderStatusForVideoQuery;
 use PierreMiniggio\ConfigProvider\ConfigProvider;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
@@ -17,6 +19,7 @@ use RuntimeException;
 
 class App
 {
+
     public function run(
         string $path,
         ?string $queryParameters,
@@ -57,6 +60,7 @@ class App
 
         $articleUrlPrefix = '/article/';
         $remotionUrlPrefix = '/remotion/';
+        $renderUrlPrefix = '/render/';
 
         if ($path === '/headline' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->protectUsingToken($authHeader, $config);
@@ -70,18 +74,23 @@ class App
                 new SaveContentCommand($fetcher)
             ))(file_get_contents('php://input'));
             exit;
-        } elseif (str_starts_with($path, $articleUrlPrefix)) {
+        } elseif (str_starts_with($path, $articleUrlPrefix) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             (new ShowArticleController(
                 new ArticleQuery($fetcher)
             ))(explode('?', substr($path, strlen($articleUrlPrefix)))[0]);
             exit;
-        } elseif (str_starts_with($path, $remotionUrlPrefix)) {
+        } elseif (str_starts_with($path, $remotionUrlPrefix) && $_SERVER['REQUEST_METHOD'] === 'GET') {
             (new ShowRemotionPropsController(
                 new RemotionPropsQuery($fetcher)
             ))(explode('?', substr($path, strlen($remotionUrlPrefix)))[0]);
             exit;
+        } elseif (str_starts_with($path, $renderUrlPrefix) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+            (new DisplayController(
+                new CurrentRenderStatusForVideoQuery($fetcher)
+            ))(explode('?', substr($path, strlen($renderUrlPrefix)))[0]);
+            exit;
         }
-
+        
         http_response_code(404);
         exit;
     }
