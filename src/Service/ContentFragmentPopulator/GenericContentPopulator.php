@@ -106,6 +106,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'exclamation' => 'exclamation',
             'exit' => 'exit',
             'fan' => 'fan',
+            'fascinat' => 'interesting',
             'follow' => 'follow',
             'full' => 'full',
             'help' => 'help',
