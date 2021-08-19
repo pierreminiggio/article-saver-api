@@ -122,8 +122,9 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'rocket' => 'rocket',
             'roll' => 'roll',
             'saturday' => 'saturday',
+            'seeing' => 'vision',
             'self-driving' => 'self-driving',
-            'send' => 'send',
+            'send' => 'send',hel
             'sleep' => 'ronflex',
             'slow' => 'snail',
             'snail' => 'snail',
