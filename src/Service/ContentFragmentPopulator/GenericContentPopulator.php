@@ -121,6 +121,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'patient' => 'ronflex',
             'patience' => 'ronflex',
             'people' => 'people',
+            'police' => 'police',
             'public' => 'people',
             'question' => 'question',
             'radar' => 'radar',
