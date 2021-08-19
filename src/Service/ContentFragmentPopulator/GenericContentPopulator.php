@@ -106,6 +106,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'interesting' => 'interesting',
             'launch' => 'rocket',
             'leave' => 'exit',
+            'light' => 'light',
             'mars' => 'mars',
             'midnight' => 'midnight',
             'mind' => 'mind',
