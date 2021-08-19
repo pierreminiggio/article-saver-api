@@ -87,6 +87,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'automaker' => 'automaker',
             'bed' => 'ronflex',
             'button' => 'button',
+            'calculat' => 'calculator',
             'california' => 'california',
             'camera' => 'camera',
             'clear' => 'remove',
