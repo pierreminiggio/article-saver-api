@@ -147,6 +147,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'spent' => 'spend',
             'tail' => 'tail',
             'tech' => 'tech',
+            'team' => 'people',
             'tesla' => 'tesla',
             'test' => 'test',
             'thousand' => 'thousand',
