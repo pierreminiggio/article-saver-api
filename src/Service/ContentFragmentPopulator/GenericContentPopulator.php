@@ -122,6 +122,8 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'month' => 'month',
             'morning' => 'morning',
             'musk' => 'elon',
+            'network' => 'tech',
+            'neural' => 'mind',
             'news' => 'news',
             'observ' => 'vision',
             'patient' => 'ronflex',
