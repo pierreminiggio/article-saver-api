@@ -96,6 +96,8 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'catch' => 'capture',
             'clear' => 'remove',
             'comment' => 'comment',
+            'comput' => 'computer',
+            'data' => 'computer',
             'download' => 'download',
             'electric' => 'electricity',
             'electricity' => 'electricity',
