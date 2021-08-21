@@ -48,8 +48,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             CURLOPT_POST => 1,
             CURLOPT_POSTFIELDS => json_encode([
                 'text' => $textContent,
-                'lang' => 'en',
-                'tld' => 'com'
+                'voice' => 'owen-kid-male',
             ])
         ]);
 
