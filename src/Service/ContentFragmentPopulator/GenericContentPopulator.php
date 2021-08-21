@@ -40,7 +40,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             throw new InvalidArgumentException('Tries must be >= 1');
         }
 
-        $curl = curl_init('https://voice.ggio.fr/processed' . ($enchance ? '' : '?enhance=0'));
+        $curl = curl_init('https://voice.ggio.fr/speechelo' . ($enchance ? '' : '?enhance=0'));
         curl_setopt_array($curl, [
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_RETURNTRANSFER => true,
