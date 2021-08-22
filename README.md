@@ -37,4 +37,25 @@ ALTER TABLE `video_render_status`
 
 ALTER TABLE `video_render_status`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `youtube_account` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `youtube_id` VARCHAR(255) NOT NULL,
+  `google_client_id` VARCHAR(255) NOT NULL,
+  `google_client_secret` TEXT NOT NULL,
+  `google_refresh_token` TEXT NOT NULL,
+  `description` TEXT NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `channel_domain` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `youtube_id` INT NOT NULL,
+  `domain` VARCHAR(255) NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
 ```
