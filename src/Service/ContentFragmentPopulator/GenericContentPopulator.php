@@ -161,6 +161,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'thousand' => 'thousand',
             'three' => 'three',
             'time' => 'time',
+            'transition' => 'turn',
             'turning' => 'turn',
             'tweet' => 'twitter',
             'twitter' => 'twitter',
