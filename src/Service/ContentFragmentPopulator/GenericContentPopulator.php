@@ -148,6 +148,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'sleep' => 'ronflex',
             'slow' => 'snail',
             'snail' => 'snail',
+            'soon' => 'soon',
             'software' => 'software',
             'spend' => 'spend',
             'spent' => 'spend',
