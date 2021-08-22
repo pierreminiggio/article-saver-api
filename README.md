@@ -61,6 +61,7 @@ CREATE TABLE `channel_domain` (
 
 CREATE TABLE `upload_status` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `video_id` INT NOT NULL,
   `channel_id` INT NOT NULL,
   `finished_at` DATETIME NULL,
   `youtube_id` VARCHAR(255) NOT NULL,
@@ -69,4 +70,5 @@ CREATE TABLE `upload_status` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
 ```
