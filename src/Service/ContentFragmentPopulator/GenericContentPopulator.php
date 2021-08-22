@@ -170,6 +170,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'twitter' => 'twitter',
             'update' => 'update',
             'updating' => 'update',
+            'video' => 'camera',
             'vision' => 'vision',
             'wait' => 'time',
             'waiting' => 'time',
