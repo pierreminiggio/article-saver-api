@@ -113,6 +113,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
             'fascinat' => 'interesting',
             'follow' => 'follow',
             'full' => 'full',
+            'function' => 'turn',
             'help' => 'help',
             'intelligen' => 'mind',
             'interesting' => 'interesting',
