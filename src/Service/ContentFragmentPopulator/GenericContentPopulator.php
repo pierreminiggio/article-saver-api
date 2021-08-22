@@ -81,6 +81,7 @@ class GenericContentPopulator extends ContentFragmentPopulator
         $cueTypes = [
             'add' => 'add',
             'added' => 'add',
+            ' ai ' => 'software',
             'air' => 'air',
             'ambulance' => 'ambulance',
             'asking' => 'question',
