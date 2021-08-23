@@ -44,7 +44,9 @@ CREATE TABLE `youtube_account` (
   `google_client_id` VARCHAR(255) NOT NULL,
   `google_client_secret` TEXT NOT NULL,
   `google_refresh_token` TEXT NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
+  `tags` TEXT NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)

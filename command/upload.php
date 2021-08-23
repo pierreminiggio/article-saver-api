@@ -1,5 +1,6 @@
 <?php
 
+use App\Service\ContentFragmentPopulator\ContentFragmentPopulatorFactory;
 use PierreMiniggio\ConfigProvider\ConfigProvider;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
@@ -20,7 +21,7 @@ $fetcher = new DatabaseFetcher(new DatabaseConnection(
     DatabaseConnection::UTF8_MB4
 ));
 
-$renderedVideos = $fetcher->query(
+$videosToUpload = $fetcher->query(
     $fetcher->createQuery(
         'article',
         'a'
@@ -30,7 +31,15 @@ $renderedVideos = $fetcher->query(
         'a.link',
         'a.thumbnail',
         'vrs.file_path',
-        'vtr.id as video_id'
+        'vtr.id as video_id',
+        'ya.id as channel_id',
+        'ya.youtube_id',
+        'ya.google_client_id',
+        'ya.google_client_secret',
+        'ya.google_refresh_token',
+        'ya.title as youtube_title',
+        'ya.description as youtube_description',
+        'ya.tags as youtube_tags'
     )->join(
         'video_to_render as vtr',
         'vtr.article_id = a.id AND vtr.remotion_props IS NOT NULL'
@@ -40,6 +49,12 @@ $renderedVideos = $fetcher->query(
     )->join(
         'upload_status as us',
         'us.video_id = vtr.id AND us.failed_at IS NULL'
+    )->join(
+        'channel_domain as cd',
+        'a.link LIKE CONCAT(\'%\', cd.domain ,\'%\')'
+    )->join(
+        'youtube_account as ya',
+        'ya.id = cd.youtube_id'
     )->where(<<<SQL
         vtr.id IS NOT NULL
         AND vrs.id IS NOT NULL
@@ -55,14 +70,26 @@ $alreadyUploadedOrUploadingQuery = $fetcher->createQuery(
     'video_id = :video_id AND failed_at IS NULL'
 );
 
-foreach ($renderedVideos as $renderedVideo) {
-    $filePath = $renderedVideo['file_path'];
+$maxYoutubeTitleLength = 100;
+
+/** @var int[] */
+$alreadyPostedChannelIds = [];
+
+foreach ($videosToUpload as $videoToUpload) {
+
+    $channelId = (int) $videoToUpload['channel_id'];
     
-    if (! file_exists($filePath)) {
+    if (in_array($channelId, $alreadyPostedChannelIds, true)) {
         continue;
     }
 
-    $videoId = (int) $renderedVideo['video_id'];
+    $filePath = $videoToUpload['file_path'];
+    
+    // if (! file_exists($filePath)) {
+    //     continue;
+    // }
+
+    $videoId = (int) $videoToUpload['video_id'];
 
     $fetchedUploads = $fetcher->query($alreadyUploadedOrUploadingQuery, ['video_id' => $videoId]);
 
@@ -70,5 +97,68 @@ foreach ($renderedVideos as $renderedVideo) {
         continue;
     }
 
-    var_dump($renderedVideo);
+    $youtubeChannelId = $videoToUpload['youtube_id'];
+    $googleClientId = $videoToUpload['google_client_id'];
+    $googleClientSecret = $videoToUpload['google_client_secret'];
+    $googleRefreshToken = $videoToUpload['google_refresh_token'];
+
+    if (! $youtubeChannelId || ! $googleClientId || ! $googleClientSecret || ! $googleRefreshToken) {
+        continue;
+    }
+
+    // Build title
+    $articleTitle = $videoToUpload['title'];
+    $youtubeTitle = $videoToUpload['youtube_title'];
+    $articleTitlePlaceHolder = '[title]';
+    
+    $youtubeTitleLength = strlen($youtubeTitle);
+    $articlePlaceholderLength = strlen($articleTitlePlaceHolder);
+    $youtubeTitleWithoutArticlePlaceholderLength = $youtubeTitleLength - $articlePlaceholderLength;
+
+    $articleTitleLength = strlen($videoToUpload['title']);
+
+    $maxArticleTitleLength = $maxYoutubeTitleLength - $youtubeTitleWithoutArticlePlaceholderLength;
+
+    if ($articleTitleLength > $maxArticleTitleLength) {
+        $articleTitle = substr($articleTitle, 0, $maxArticleTitleLength);
+    }
+
+    $videoTitle = str_replace($articleTitlePlaceHolder, $articleTitle, $youtubeTitle);
+
+    // Build Tags
+    $videoTags = [];
+    $youtubeTags = $videoToUpload['youtube_tags'];
+    
+    if ($youtubeTags) {
+        $jsonYoutubeTags = json_decode($youtubeTags, true);
+
+        if ($jsonYoutubeTags) {
+            $videoTags = $jsonYoutubeTags;
+        }
+    }
+    
+    array_unshift($videoTags, $videoTitle);
+
+    // Build description
+    $articleDescription = $videoToUpload['description'];
+    $youtubeDescription = $videoToUpload['youtube_description'];
+    $articleDescriptionPlaceHolder = '[description]';
+    $articleTagsPlaceHolder = '[tags]';
+
+    $videoDescription = str_replace(
+        [$articleDescriptionPlaceHolder, $articleTagsPlaceHolder],
+        [
+            $articleDescription . (
+                PHP_EOL . PHP_EOL . 'Source : ' . $videoToUpload['link']
+            ),
+            'Tags :' . PHP_EOL . implode(PHP_EOL, $videoTags)
+        ],
+        $youtubeDescription
+    );
+
+    // thumbnail, upload, and store
+
+
+    // Add to already posted channels
+    $alreadyPostedChannelIds[] = $channelId;
 }

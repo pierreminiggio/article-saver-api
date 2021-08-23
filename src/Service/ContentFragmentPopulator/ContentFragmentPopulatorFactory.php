@@ -7,6 +7,13 @@ use Exception;
 class ContentFragmentPopulatorFactory
 {
 
+    /** @var string[] */
+    protected static array $textContentTypes = [
+        'block-quote',
+        'text',
+        'title'
+    ];
+
     public function __construct(private string $token, private string $projectDir)
     {
     }
@@ -22,13 +29,7 @@ class ContentFragmentPopulatorFactory
         $token = $this->token;
         $projectDir = $this->projectDir;
 
-        if (
-            in_array($contentType, [
-                'block-quote',
-                'text',
-                'title'
-            ])
-        ) {
+        if (in_array($contentType, self::$textContentTypes)) {
             return new GenericContentPopulator($token, $projectDir, 'content');
         }
 
