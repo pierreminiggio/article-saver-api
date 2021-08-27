@@ -1,16 +1,31 @@
 <?php
 
-use App\Service\ContentFragmentPopulator\ContentFragmentPopulatorFactory;
+use NeutronStars\Database\Query;
 use PierreMiniggio\ConfigProvider\ConfigProvider;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
+use PierreMiniggio\GoogleTokenRefresher\AccessTokenProvider;
+use PierreMiniggio\YoutubeThumbnailUploader\ThumbnailUploader;
+use PierreMiniggio\YoutubeVideoUpdater\VideoUpdater;
 
-require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+$projectDirectory = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
 
-require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+require $projectDirectory . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+$cacheFolder = $projectDirectory . 'cache' . DIRECTORY_SEPARATOR;
+
+if (! file_exists($cacheFolder)) {
+    mkdir($cacheFolder);
+}
 
 $configProvider = new ConfigProvider(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
 $config = $configProvider->get();
+
+$uploadApi = $config['upload_api'];
+
+$apiUrl = $uploadApi['url'];
+$apiToken = $uploadApi['token'];
+$authHeader = ['Content-Type: application/json' , 'Authorization: Bearer ' . $apiToken];
 
 $dbConfig = $config['db'];
 $fetcher = new DatabaseFetcher(new DatabaseConnection(
@@ -20,6 +35,27 @@ $fetcher = new DatabaseFetcher(new DatabaseConnection(
     $dbConfig['password'],
     DatabaseConnection::UTF8_MB4
 ));
+
+$markAsfailed = function (int $uploadStatusId, string $reason) use ($fetcher): void {
+    $fetcher->exec(
+        $fetcher->createQuery(
+            'upload_status'
+        )->update(
+            'failed_at = :failed_at, fail_reason = :fail_reason'
+        )->where(
+            'id = :id'
+        ),
+        [
+            'failed_at' => (new DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'fail_reason' => $reason,
+            'id' => $uploadStatusId
+        ]
+    );
+};
+
+$provider = new AccessTokenProvider();
+$updater = new VideoUpdater();
+$uploader = new ThumbnailUploader();
 
 $videosToUpload = $fetcher->query(
     $fetcher->createQuery(
@@ -85,9 +121,9 @@ foreach ($videosToUpload as $videoToUpload) {
 
     $filePath = $videoToUpload['file_path'];
     
-    // if (! file_exists($filePath)) {
-    //     continue;
-    // }
+    if (! file_exists($filePath)) {
+        continue;
+    }
 
     $videoId = (int) $videoToUpload['video_id'];
 
@@ -156,8 +192,164 @@ foreach ($videosToUpload as $videoToUpload) {
         $youtubeDescription
     );
 
-    // thumbnail, upload, and store
+    // Thumbnail
+    $thumbnailName = $videoId . '.png';
+    $thumbnailPath = $cacheFolder . $thumbnailName;
 
+    if (! file_exists($thumbnailPath)) {
+        $seconds = 3;
+        shell_exec('ffmpeg -i ' . $filePath . ' -vframes 1 -an -s 1600x900 -ss ' . $seconds . ' ' . $thumbnailPath);
+    }
+
+    if (! file_exists($thumbnailPath)) {
+        var_dump('failed to create thumbnail for ' . $videoId);
+        continue;
+    }
+
+    $uploadStatusesQuery = [
+        $fetcher->createQuery(
+            'upload_status'
+        )->select(
+            'id',
+            'finished_at',
+            'failed_at'
+        )->where(
+            'video_id = :video_id'
+        )->orderBy(
+            'id',
+            Query::ORDER_BY_DESC
+        )->limit(
+            1
+        ),
+        ['video_id' => $videoId]
+    ];
+
+    // Create upload status line
+    $fetchedUploadStatuses = $fetcher->query(...$uploadStatusesQuery);
+
+    if ($fetchedUploadStatuses) {
+        $fetchedUploadStatus = $fetchedUploadStatuses[0];
+
+        if ($fetchedUploadStatus['finished_at'] !== null) {
+            var_dump($videoId . ' already rendered');
+            continue;
+        }
+
+        if ($fetchedUploadStatus['failed_at'] === null) {
+            var_dump($videoId . ' already rendering');
+            continue;
+        }
+    }
+
+    $fetcher->exec(
+        $fetcher->createQuery(
+            'upload_status'
+        )->insertInto(
+            'video_id, channel_id',
+            ':video_id, :channel_id'
+        ),
+        ['video_id' => $videoId, 'channel_id' => $channelId]
+    );
+
+    $fetchedUploadStatuses = $fetcher->query(...$uploadStatusesQuery);
+
+    if (! $fetchedUploadStatuses) {
+        var_dump($videoId . ' upload creation failed');
+        continue;
+    }
+
+    $fetchedUploadStatus = $fetchedUploadStatuses[0];
+
+    $uploadStatusId = $fetchedUploadStatus['id'];
+
+    // Upload
+    $curl = curl_init($apiUrl . '/' . $youtubeChannelId);
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => $authHeader,
+        CURLOPT_POST => 1,
+        CURLOPT_POSTFIELDS => json_encode([
+            'video_url' => 'https://article-saver-api.ggio.fr/render/' . $videoId,
+            'title' => 'Article video ' . $videoId,
+            'description' => 'Super Article Description'
+        ])
+    ]);
+
+    $response = curl_exec($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+
+    if ($httpCode !== 200) {
+        $markAsfailed($uploadStatusId, 'Posting failed : ' . $response);
+        continue;
+    }
+
+    if (! $response) {
+        $markAsfailed($uploadStatusId, 'API returned an empty response');
+        continue;
+    }
+
+    $jsonResponse = json_decode($response, true);
+
+    if (! $jsonResponse) {
+        $markAsfailed($uploadStatusId, 'API returned a bad json response : ' . $response);
+        continue;
+    }
+
+    if (empty($jsonResponse['id'])) {
+        $markAsfailed($uploadStatusId, 'API returned a bad json response, "id" missing : ' . $jsonResponse);
+        continue;
+    }
+
+    $youtubeVideoId = $jsonResponse['id'];
+
+    $accessToken = $provider->get($googleClientId, $googleClientSecret, $googleRefreshToken);
+
+    // Update video data
+    $updater->update(
+        $accessToken,
+        $youtubeVideoId,
+        $videoTitle,
+        $videoDescription,
+        $videoTags,
+        27,
+        false
+    );
+
+    // Upload thumnail
+    try {
+        $uploader->upload(
+            $accessToken,
+            $youtubeVideoId,
+            $thumbnailPath
+        );
+    } catch (Exception $e) {
+        var_dump('Could not upload thumbnail for video ' . $videoId . ': ' . $e->getMessage());
+    }
+
+    // Update status line
+    $fetcher->exec(
+        $fetcher->createQuery(
+            'upload_status'
+        )->update(
+            'finished_at = :finished_at, youtube_id = :youtube_id'
+        )->where(
+            'id = :id'
+        ),
+        [
+            'finished_at' => (new DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'youtube_id' => $youtubeVideoId,
+            'id' => $uploadStatusId
+        ]
+    );
+
+    if (file_exists($filePath)) {
+        unlink($filePath);
+    }
+
+    if (file_exists($thumbnailPath)) {
+        unlink($thumbnailPath);
+    }
 
     // Add to already posted channels
     $alreadyPostedChannelIds[] = $channelId;

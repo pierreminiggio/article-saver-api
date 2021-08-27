@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74a62a874c61850e29233d4d83994da8",
+    "content-hash": "2ee9345b375aece30814fb968bfadbe5",
     "packages": [
         {
             "name": "neutronstars/database-sql",
@@ -555,6 +555,118 @@
                 "source": "https://github.com/pierreminiggio/php-github-user-agent/tree/1.0.0"
             },
             "time": "2021-04-28T19:47:42+00:00"
+        },
+        {
+            "name": "pierreminiggio/google-api-get-access-token-from-refresh-token",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pierreminiggio/php-google-api-get-access-token-from-refresh-token.git",
+                "reference": "b5f9b47a26adfd6bfe59d5f37aab87f45319f1ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pierreminiggio/php-google-api-get-access-token-from-refresh-token/zipball/b5f9b47a26adfd6bfe59d5f37aab87f45319f1ef",
+                "reference": "b5f9b47a26adfd6bfe59d5f37aab87f45319f1ef",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PierreMiniggio\\GoogleTokenRefresher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Pierre MINIGGIO",
+                    "email": "pierre@miniggiodev.fr"
+                }
+            ],
+            "description": "Get Google API Access Token using your Refresh Token",
+            "support": {
+                "issues": "https://github.com/pierreminiggio/php-google-api-get-access-token-from-refresh-token/issues",
+                "source": "https://github.com/pierreminiggio/php-google-api-get-access-token-from-refresh-token/tree/1.1.0"
+            },
+            "time": "2021-04-20T19:31:14+00:00"
+        },
+        {
+            "name": "pierreminiggio/youtube-thumbnail-uploader",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pierreminiggio/youtube-thumbnail-uploader.git",
+                "reference": "d1872153994244b2b460f45f4a291f7ed58bdc88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pierreminiggio/youtube-thumbnail-uploader/zipball/d1872153994244b2b460f45f4a291f7ed58bdc88",
+                "reference": "d1872153994244b2b460f45f4a291f7ed58bdc88",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PierreMiniggio\\YoutubeThumbnailUploader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Pierre MINIGGIO",
+                    "email": "pierre@miniggiodev.fr"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/pierreminiggio/youtube-thumbnail-uploader/issues",
+                "source": "https://github.com/pierreminiggio/youtube-thumbnail-uploader/tree/1.0.1"
+            },
+            "time": "2021-04-20T10:19:03+00:00"
+        },
+        {
+            "name": "pierreminiggio/youtube-video-updater",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pierreminiggio/youtube-video-updater.git",
+                "reference": "beff52f0911a4f6a4ba1bfe966af88ff44003095"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pierreminiggio/youtube-video-updater/zipball/beff52f0911a4f6a4ba1bfe966af88ff44003095",
+                "reference": "beff52f0911a4f6a4ba1bfe966af88ff44003095",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PierreMiniggio\\YoutubeVideoUpdater\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Pierre MINIGGIO",
+                    "email": "pierre@miniggiodev.fr"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/pierreminiggio/youtube-video-updater/issues",
+                "source": "https://github.com/pierreminiggio/youtube-video-updater/tree/1.0.2"
+            },
+            "time": "2021-04-20T15:50:34+00:00"
         }
     ],
     "packages-dev": [],
@@ -562,7 +674,10 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "pierreminiggio/config-provider": 20,
-        "pierreminiggio/github-action-remotion-renderer": 20
+        "pierreminiggio/github-action-remotion-renderer": 20,
+        "pierreminiggio/google-api-get-access-token-from-refresh-token": 20,
+        "pierreminiggio/youtube-thumbnail-uploader": 20,
+        "pierreminiggio/youtube-video-updater": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

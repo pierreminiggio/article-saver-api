@@ -18,7 +18,10 @@
     "require": {
         "pierreminiggio/config-provider": "dev-main",
         "pierreminiggio/database-fetcher": "^1.0",
-        "pierreminiggio/github-action-remotion-renderer": "dev-main"
+        "pierreminiggio/github-action-remotion-renderer": "dev-main",
+        "pierreminiggio/google-api-get-access-token-from-refresh-token": "dev-main",
+        "pierreminiggio/youtube-thumbnail-uploader": "dev-main",
+        "pierreminiggio/youtube-video-updater": "dev-main"
     },
     "scripts-descriptions": {
         "test": "Run all tests!"

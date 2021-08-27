@@ -66,9 +66,9 @@ CREATE TABLE `upload_status` (
   `video_id` INT NOT NULL,
   `channel_id` INT NOT NULL,
   `finished_at` DATETIME NULL,
-  `youtube_id` VARCHAR(255) NOT NULL,
+  `youtube_id` VARCHAR(255) NULL,
   `failed_at` DATETIME NULL,
-  `failed_reason` TEXT NULL,
+  `fail_reason` TEXT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
