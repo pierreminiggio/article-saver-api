@@ -2,6 +2,7 @@
 
 namespace App\Service\ContentFragmentPopulator;
 
+use App\Service\EmbedSrcMatcher\YoutubeVideoSrcMatcher;
 use Exception;
 
 class ContentFragmentPopulatorFactory
@@ -14,7 +15,11 @@ class ContentFragmentPopulatorFactory
         'title'
     ];
 
-    public function __construct(private string $token, private string $projectDir)
+    public function __construct(
+        private string $token,
+        private string $projectDir,
+        private YoutubeVideoSrcMatcher $youtubeVideoSrcMatcher
+    )
     {
     }
 
@@ -46,7 +51,7 @@ class ContentFragmentPopulatorFactory
                 'image'
             ])
         ) {
-            return new DoNothingPopulator();
+            return new ImageContentPopulator();
         }
 
         if (
@@ -55,6 +60,18 @@ class ContentFragmentPopulatorFactory
             ])
         ) {
             return new TwitterContentPopulator($token, $projectDir);
+        }
+
+        if ($contentType === 'embed') {
+            $url = $content['url'] ?? null;
+
+            if ($url === null) {
+                throw new Exception('WTF an embed with no URL ???');
+            }
+
+            if ($this->youtubeVideoSrcMatcher->getYoutubeId($url) !== null) {
+                return new YoutubeEmbedPopulator();
+            }
         }
         
         throw new Exception($contentType . ' not implemented');

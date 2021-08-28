@@ -9,7 +9,7 @@ class TwitterContentPopulator extends ContentFragmentPopulator
     {
     }
 
-    public function populate(array $content, float &$totalDuration): array
+    public function populate(array $content, float &$totalDuration, float $previousContentDuration): array
     {
         $token = $this->token;
         $projectDir = $this->projectDir;

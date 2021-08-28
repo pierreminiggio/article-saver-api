@@ -11,6 +11,11 @@
             "App\\": "src/"
         }
     },
+    "autoload-test": {
+        "psr-4": {
+            "Test\\": "tests/"
+        }
+    },
     "config": {
         "sort-packages": true
     },
@@ -23,7 +28,13 @@
         "pierreminiggio/youtube-thumbnail-uploader": "dev-main",
         "pierreminiggio/youtube-video-updater": "dev-main"
     },
+    "scripts": {
+        "test": "bash vendor/bin/phpunit tests/"
+    },
     "scripts-descriptions": {
         "test": "Run all tests!"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "10.0.x-dev"
     }
 }

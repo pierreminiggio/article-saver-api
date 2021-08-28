@@ -1,6 +1,7 @@
 <?php
 
 use App\Service\ContentFragmentPopulator\ContentFragmentPopulatorFactory;
+use App\Service\EmbedSrcMatcher\YoutubeVideoSrcMatcher;
 use PierreMiniggio\ConfigProvider\ConfigProvider;
 use PierreMiniggio\DatabaseConnection\DatabaseConnection;
 use PierreMiniggio\DatabaseFetcher\DatabaseFetcher;
@@ -69,10 +70,14 @@ $jsonArticleContent = json_decode($articleContent, true);
 $contentProps = [];
 $totalDuration = 0.0;
 
-$contentPopulatorFactory = new ContentFragmentPopulatorFactory($token, $projectDir);
+$contentPopulatorFactory = new ContentFragmentPopulatorFactory($token, $projectDir, new YoutubeVideoSrcMatcher());
+
+$previousContentDuration = 0;
 
 foreach ($jsonArticleContent as $contentFragment) {
-    $contentProps[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment, $totalDuration);
+    $previousTotalDuration = $totalDuration;
+    $contentProps[] = $contentPopulatorFactory->make($contentFragment)->populate($contentFragment, $totalDuration, $previousContentDuration);
+    $previousContentDuration = $totalDuration - $previousTotalDuration;
 }
 
 $remotionProps = [
