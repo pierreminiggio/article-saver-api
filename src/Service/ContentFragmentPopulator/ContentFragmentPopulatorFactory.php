@@ -57,6 +57,6 @@ class ContentFragmentPopulatorFactory
             return new TwitterContentPopulator($token, $projectDir);
         }
         
-        throw new Exception('Not implemented');
+        throw new Exception($contentType . ' not implemented');
     }
 }
