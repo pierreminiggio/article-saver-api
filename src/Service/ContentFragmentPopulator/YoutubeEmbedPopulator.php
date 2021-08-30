@@ -78,7 +78,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
             fclose($fp);
 
             if ($httpCode !== 200) {
-                unlink($videoClipUrl);
+                unlink($filename);
             }
         }
         if (! file_exists($filename)) {
