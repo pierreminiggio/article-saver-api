@@ -48,17 +48,6 @@ $fetchedArticle = $fetchedArticles[0];
 
 $articleId = (int) $fetchedArticle['id'];
 
-// Mark as starting preparing
-$fetcher->exec(
-    $fetcher->createQuery(
-        'video_to_render'
-    )->insertInto(
-        'article_id',
-        ':article_id'
-    ),
-    ['article_id' => $articleId]
-);
-
 $articleContent = $fetchedArticle['content'];
 
 if (! $articleContent) {
@@ -84,6 +73,17 @@ $remotionProps = [
     'duration' => $totalDuration,
     'content' => $contentProps
 ];
+
+// Mark as starting preparing
+$fetcher->exec(
+    $fetcher->createQuery(
+        'video_to_render'
+    )->insertInto(
+        'article_id',
+        ':article_id'
+    ),
+    ['article_id' => $articleId]
+);
 
 // Save props
 $fetcher->query(
