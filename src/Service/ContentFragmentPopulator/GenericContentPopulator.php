@@ -67,7 +67,9 @@ class GenericContentPopulator extends ContentFragmentPopulator
         }
 
         if ($tries === 1) {
-            throw new Exception('Could not get audio');
+            throw new Exception(
+                'Could not get audio for "' . str_replace('"', '\\"', $textContent) . '" ' . (int) $enchance
+            );
         }
 
         return $this->getAudioLink($textContent, $enchance, $tries - 1);
