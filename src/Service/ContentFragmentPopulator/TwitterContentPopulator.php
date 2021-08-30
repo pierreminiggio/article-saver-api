@@ -17,7 +17,8 @@ class TwitterContentPopulator extends ContentFragmentPopulator
         $main = $content['main'];
         $content['main'] = (new GenericContentPopulator($token, $projectDir, 'content'))->populate(
             $main,
-            $totalDuration
+            $totalDuration,
+            $previousContentDuration
         );
 
         $reply = $content['reply'] ?? null;
@@ -25,7 +26,8 @@ class TwitterContentPopulator extends ContentFragmentPopulator
         if ($reply !== null) {
             $content['reply'] = (new GenericContentPopulator($token, $projectDir, 'content'))->populate(
                 $reply,
-                $totalDuration
+                $totalDuration,
+                $previousContentDuration
             );
         }
 
