@@ -70,7 +70,7 @@ class ContentFragmentPopulatorFactory
             }
 
             if ($this->youtubeVideoSrcMatcher->getYoutubeId($url) !== null) {
-                return new YoutubeEmbedPopulator();
+                return new YoutubeEmbedPopulator($token, $projectDir, $this->youtubeVideoSrcMatcher);
             }
         }
         
