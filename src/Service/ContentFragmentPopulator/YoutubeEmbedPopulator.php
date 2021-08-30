@@ -4,7 +4,7 @@ namespace App\Service\ContentFragmentPopulator;
 
 use App\Service\EmbedSrcMatcher\YoutubeVideoSrcMatcher;
 
-class YoutubeEmbedPopulator implements ContentFragmentPopulator
+class YoutubeEmbedPopulator extends ContentFragmentPopulator
 {
 
     public function __construct(
