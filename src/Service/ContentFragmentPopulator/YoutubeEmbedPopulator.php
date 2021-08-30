@@ -50,7 +50,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         $httpCode = curl_getinfo($videoClipCurl)['http_code'];
         curl_close($videoClipCurl);
 
-        $content['video_clip'] = $httpCode === 204 ? ($outputClipUrl . $youtubeVideoId) : null;
+        $content['video_clip'] = $httpCode === 204 ? ($outputClipUrl . $youtubeVideoId . '.webm') : null;
     }
 
     protected function populateVideoClipDuration(array &$content, string $youtubeVideoId): void
@@ -64,7 +64,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
 
         $cacheFolder = $this->projectDir . 'cache' . DIRECTORY_SEPARATOR;
 
-        $filename = $cacheFolder . $youtubeVideoId . '.mp4';
+        $filename = $cacheFolder . $youtubeVideoId . '.webm';
 
         if (! file_exists($filename)) {
             $fp = fopen($filename, 'w+');
