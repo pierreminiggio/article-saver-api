@@ -30,7 +30,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         }
 
         $this->populateVideoClip($content, $youtubeVideoId);
-        $this->populateVideoClipDuration($content, $youtubeVideoId);
+        $this->populateVideoClipDuration($content, $youtubeVideoId, $totalDuration);
         $this->populateVideoTitle($content, $youtubeVideoId);
 
         return $content;
@@ -53,7 +53,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         $content['video_clip'] = $httpCode === 204 ? ($outputClipUrl . $youtubeVideoId . '.webm') : null;
     }
 
-    protected function populateVideoClipDuration(array &$content, string $youtubeVideoId): void
+    protected function populateVideoClipDuration(array &$content, string $youtubeVideoId, float &$totalDuration): void
     {
         $content['video_clip_duration'] = null;
         $videoClipUrl = $content['video_clip'] ?? null;
@@ -92,7 +92,9 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
 
         unlink($filename);
 
-        $content['video_clip_duration'] = (float) $probedDuration;
+        $videoClipDuration = (float) $probedDuration;
+        $totalDuration += $videoClipDuration;
+        $content['video_clip_duration'] = $videoClipDuration;
     }
 
     protected function populateVideoTitle(array &$content, string $youtubeVideoId): void
