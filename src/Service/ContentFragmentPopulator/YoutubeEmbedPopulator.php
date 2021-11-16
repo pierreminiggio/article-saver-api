@@ -38,6 +38,15 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
 
     protected function populateVideoClip(array &$content, string $youtubeVideoId): void
     {
+        $this->tryPopulatingVideoClip($content, $youtubeVideoId);
+    }
+
+    protected function tryPopulatingVideoClip(array &$content, string $youtubeVideoId, int $retries = 1): void
+    {
+        if ($retries < 0) {
+            return;
+        }
+        
         $clipApiUrl = 'https://youtube-video-random-clip-api.miniggiodev.fr/';
         $outputClipUrl = $clipApiUrl . 'public/video/';
 
@@ -51,6 +60,8 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         curl_close($videoClipCurl);
 
         $content['video_clip'] = $httpCode === 204 ? ($outputClipUrl . $youtubeVideoId . '.webm') : null;
+
+        $this->tryPopulatingVideoClip($content, $youtubeVideoId, $retries - 1);
     }
 
     protected function populateVideoClipDuration(array &$content, string $youtubeVideoId, float &$totalDuration): void
