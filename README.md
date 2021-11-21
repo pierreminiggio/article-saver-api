@@ -22,6 +22,8 @@ CREATE TABLE `article`.`video_to_render` (
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
+alter table `video_to_render` add constraint `video_to_render_article_id` unique(article_id);
+
 CREATE TABLE `video_render_status` (
   `id` int NOT NULL,
   `video_id` int NOT NULL,
