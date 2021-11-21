@@ -197,8 +197,44 @@ foreach ($videosToUpload as $videoToUpload) {
     $thumbnailPath = $cacheFolder . $thumbnailName;
 
     if (! file_exists($thumbnailPath)) {
-        $seconds = 3;
-        shell_exec('ffmpeg -i ' . $filePath . ' -vframes 1 -an -s 1600x900 -ss ' . $seconds . ' ' . $thumbnailPath);
+        $thumbnailUrl = $videoToUpload['thumbnail'];
+        $tempThumbnailPath = $cacheFolder . 'temp_' . $thumbnailName;
+
+        if (! file_exists($tempThumbnailPath)) {
+            $fp = fopen($tempThumbnailPath, 'w+');
+            $ch = curl_init($thumbnailUrl);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            fclose($fp);
+
+            if ($httpCode !== 200) {
+                var_dump('Thumbnail download failed');
+                die;
+            }
+        }
+
+        $newWidth = 1600;
+        $newHeight = 900;
+
+        $tempThumbnailResource = imagecreatefromstring(file_get_contents($tempThumbnailPath));
+
+        list ($width, $height) = [imagesx($tempThumbnailResource), imagesy($tempThumbnailResource)];
+
+        $newHeight = ($height / $width) * $newWidth;
+
+        $thumbnailResource = imagecreatetruecolor($newWidth, $newHeight);
+
+        imagecopyresampled($thumbnailResource, $tempThumbnailResource, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+        imagepng($thumbnailResource, $thumbnailPath, 8.5);
+
+        imagedestroy($tempThumbnailResource);
+        imagedestroy($thumbnailResource);
+        unlink($tempThumbnailPath);
     }
 
     if (! file_exists($thumbnailPath)) {
