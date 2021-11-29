@@ -24,7 +24,8 @@ class YoutubeVideoSrcMatcherTest extends TestCase
             ['http://www.youtube.com/embed/RJYsZAen7dw', 'RJYsZAen7dw'],
             ['https://youtube.com/embed/RJYsZAen7dw', 'RJYsZAen7dw'],
             ['http://youtube.com/embed/RJYsZAen7dw', 'RJYsZAen7dw'],
-            ['https://www.youtube.com/embed/9bZGWOrDBpg', '9bZGWOrDBpg']
+            ['https://www.youtube.com/embed/9bZGWOrDBpg', '9bZGWOrDBpg'],
+            ['https://www.youtube.com/embed/s9CRQPWC_CM?start=1758', 's9CRQPWC_CM']
         ];
     }
 }

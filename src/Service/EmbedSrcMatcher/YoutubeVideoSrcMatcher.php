@@ -16,10 +16,15 @@ class YoutubeVideoSrcMatcher
 
         foreach ($youtubePrefixes as $youtubePrefix) {
             if (str_starts_with($url, $youtubePrefix)) {
-                return substr($url, strlen($youtubePrefix));
+                return $this->removeGetParameters(substr($url, strlen($youtubePrefix)));
             }
         }
 
         return null;
+    }
+
+    protected function removeGetParameters(string $url): string
+    {
+        return explode('?', $url)[0];
     }
 }
