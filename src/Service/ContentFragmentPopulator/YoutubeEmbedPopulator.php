@@ -41,7 +41,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         $this->tryPopulatingVideoClip($content, $youtubeVideoId);
     }
 
-    protected function tryPopulatingVideoClip(array &$content, string $youtubeVideoId, int $retries = 1): void
+    protected function tryPopulatingVideoClip(array &$content, string $youtubeVideoId, int $retries = 2): void
     {
         if ($retries < 0) {
             return;
@@ -59,13 +59,30 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         $httpCode = curl_getinfo($videoClipCurl)['http_code'];
         curl_close($videoClipCurl);
 
-        $content['video_clip'] = $httpCode === 204 ? ($outputClipUrl . $youtubeVideoId . '.webm') : null;
+        $isOk = $httpCode === 204;
+
+        $content['video_clip'] = $isOk ? ($outputClipUrl . $youtubeVideoId . '.webm') : null;
+
+        if ($isOk) {
+            return;
+        }
+
+        sleep(120);
 
         $this->tryPopulatingVideoClip($content, $youtubeVideoId, $retries - 1);
     }
 
-    protected function populateVideoClipDuration(array &$content, string $youtubeVideoId, float &$totalDuration): void
+    protected function populateVideoClipDuration(
+        array &$content,
+        string $youtubeVideoId,
+        float &$totalDuration,
+        int $retries = 2
+    ): void
     {
+        if ($retries < 0) {
+            return;
+        }
+
         $content['video_clip_duration'] = null;
         $videoClipUrl = $content['video_clip'] ?? null;
 
@@ -92,7 +109,11 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
                 unlink($filename);
             }
         }
+
         if (! file_exists($filename)) {
+            sleep(10);
+            $this->populateVideoClipDuration($content, $youtubeVideoId, $totalDuration, $retries - 1);
+
             return;
         }
 
@@ -104,6 +125,13 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         unlink($filename);
 
         $videoClipDuration = (float) $probedDuration;
+
+        if (! $videoClipDuration) {
+            sleep(10);
+            $this->populateVideoClipDuration($content, $youtubeVideoId, $totalDuration, $retries - 1);
+
+            return;
+        }
         $totalDuration += $videoClipDuration;
         $content['video_clip_duration'] = $videoClipDuration;
     }
