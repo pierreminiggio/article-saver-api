@@ -97,7 +97,7 @@ class YoutubeEmbedPopulator extends ContentFragmentPopulator
         if (! file_exists($filename)) {
             $fp = fopen($filename, 'w+');
             $ch = curl_init($videoClipUrl);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 600);
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_exec($ch);
