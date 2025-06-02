@@ -39,6 +39,11 @@ $markAsFinishedCommand = new MarkAsFinishedCommand($fetcher);
 
 foreach ($videosToRender as $videoToRender) {
     $videoIdToRender = $videoToRender->id;
+
+    if (! $videoToRender->durationInSeconds) {
+        continue;
+    }
+    
     $renderStatus = $currentRenderStatusQuery->execute($videoIdToRender);
 
     $isAlreadyRendering = $renderStatus !== null && $renderStatus->failedAt === null;
